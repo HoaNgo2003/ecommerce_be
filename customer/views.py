@@ -11,7 +11,11 @@ from allauth.socialaccount.models import SocialApp
 from django.conf import settings
 from django.contrib.auth import get_user_model
 import requests
+from rest_framework import generics
+from .models import Customer, Address, Job
+from .serializers import CustomerSerializer, AddressSerializer, JobSerializer
 User = get_user_model()
+
 def generate_jwt(user):
     refresh = RefreshToken.for_user(user)
     return {
@@ -37,8 +41,8 @@ def register(request):
 
         user = Customer.objects.create_user(email=email, username=name, password=password)
         jwt_tokens = generate_jwt(user)
-
-        return Response({"message": "User registered successfully", "tokens": jwt_tokens}, status=200)
+        user_data = CustomerSerializer(user).data
+        return Response({"message": "User registered successfully", "tokens": jwt_tokens, "customer":user_data}, status=200)
     return Response(serializer.errors, status=400)
 
 @swagger_auto_schema(
@@ -55,9 +59,9 @@ def login(request):
 
         user = authenticate(email=email, password=password)
         if user is not None:
+            user_data = CustomerSerializer(user).data
             jwt_tokens = generate_jwt(user)
-            return Response({"message": "Login successful", "tokens": jwt_tokens}, status=200)
-
+            return Response({"message": "Login successful", "tokens": jwt_tokens, "customer": user_data}, status=200)
     return Response({"error": "Invalid credentials"}, status=400)
 
 class GoogleLoginURL(APIView):
@@ -129,3 +133,32 @@ class GoogleLogin(APIView):
         jwt_tokens = generate_jwt(user)
 
         return Response({"message": "Login successful", "tokens": jwt_tokens}, status=200)
+
+
+
+# 📧 Customer API Views
+class CustomerListCreateView(generics.ListCreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+# 🏠 Address API Views
+class AddressListCreateView(generics.ListCreateAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+
+class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Address.objects.all()
+    serializer_class = AddressSerializer
+
+# 💼 Job API Views
+class JobListCreateView(generics.ListCreateAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+
+class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer

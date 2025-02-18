@@ -35,6 +35,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Application definition
 
 INSTALLED_APPS = [
+    "corsheaders",
     'django.contrib.auth',
     'rest_framework',
     'drf_yasg',
@@ -55,8 +56,10 @@ INSTALLED_APPS = [
     'products',
     'cart'
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
+     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

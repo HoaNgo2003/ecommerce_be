@@ -3,7 +3,6 @@ from .views import (
     BookListCreateView, BookDetailView,
     PhoneListCreateView, PhoneDetailView,
     ClothesListCreateView, ClothesDetailView,
-    ProductImageCreateView,
 )
 
 urlpatterns = [
@@ -19,6 +18,4 @@ urlpatterns = [
     path("clothes/", ClothesListCreateView.as_view(), name="clothes-list"),
     path("clothes/<int:pk>/", ClothesDetailView.as_view(), name="clothes-detail"),
 
-    # Product Images
-    path("images/upload/", ProductImageCreateView.as_view(), name="upload-image"),
 ]

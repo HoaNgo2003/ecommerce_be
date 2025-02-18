@@ -1,28 +1,26 @@
 from rest_framework import serializers
-from .models import Book, Phone, Clothes, ProductImage
+from .models import Book, Phone, Clothes, Product
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = "__all__"
 
-class BookSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
+class BaseProductSerializer(serializers.ModelSerializer):
+    # Define the images field in the base serializer
+    images = serializers.ListField(child=serializers.CharField())
 
     class Meta:
-        model = Book
-        fields = "__all__"
+        model = Product  # Common base model, shared by all child serializers
+        fields = "__all__"  # Includes all fields from the Product model
 
-class PhoneSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
 
-    class Meta:
-        model = Phone
-        fields = "__all__"
+class BookSerializer(BaseProductSerializer):
+    class Meta(BaseProductSerializer.Meta):
+        model = Book  # Override the model for the Book serializer
 
-class ClothesSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
 
-    class Meta:
-        model = Clothes
-        fields = "__all__"
+class PhoneSerializer(BaseProductSerializer):
+    class Meta(BaseProductSerializer.Meta):
+        model = Phone  # Override the model for the Phone serializer
+
+
+class ClothesSerializer(BaseProductSerializer):
+    class Meta(BaseProductSerializer.Meta):
+        model = Clothes  # Override the model for the Clothes serializer
