@@ -8,14 +8,12 @@ from .views import (
 urlpatterns = [
     # Books
     path("books/", BookListCreateView.as_view(), name="book-list"),
-    path("books/<int:pk>/", BookDetailView.as_view(), name="book-detail"),
+    path("books/<uuid:id>/", BookDetailView.as_view(), name="book-detail"),  # UUID Support
 
-    # Phones
     path("phones/", PhoneListCreateView.as_view(), name="phone-list"),
-    path("phones/<int:pk>/", PhoneDetailView.as_view(), name="phone-detail"),
+    path("phones/<uuid:id>/", PhoneDetailView.as_view(), name="phone-detail"),  # UUID Support
 
-    # Clothes
     path("clothes/", ClothesListCreateView.as_view(), name="clothes-list"),
-    path("clothes/<int:pk>/", ClothesDetailView.as_view(), name="clothes-detail"),
+    path("clothes/<uuid:id>/", ClothesDetailView.as_view(), name="clothes-detail"),
 
 ]

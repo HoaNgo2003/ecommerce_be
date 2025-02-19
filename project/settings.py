@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'customer',
     'products',
-    'cart'
+    'cart',
+    'order',
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -187,3 +188,7 @@ SWAGGER_SETTINGS = {
     'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
     'USE_SESSION_AUTH': False,
 }
+
+PAYPAL_CLIENT_ID = "AVIYrcwfQqYwOLMD-6iTVnE68woEnpzgE6-_w8IQ3L9vmsrwalVeZN9NXOU7Fj-Co22e3QC03nXg6TjA"
+PAYPAL_CLIENT_SECRET = "EBituEl-HECEJVj42iyB2AVYWGZxF7jpVRCZ2zbdTQTo9_KTMGnmkN3SHAWkFIIf69b7ux45sgJ2yvnq"
+PAYPAL_MODE = "sandbox"  # Change to "live" for production

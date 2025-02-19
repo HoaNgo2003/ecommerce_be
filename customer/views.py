@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from .models import Customer
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import RegisterSerializer, LoginSerializer, CustomerSerializer, AddressSerializer, JobSerializer
 from rest_framework.views import APIView
 from allauth.socialaccount.models import SocialApp
 from django.conf import settings
@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 import requests
 from rest_framework import generics
 from .models import Customer, Address, Job
-from .serializers import CustomerSerializer, AddressSerializer, JobSerializer
+
 User = get_user_model()
 
 def generate_jwt(user):
@@ -42,7 +42,7 @@ def register(request):
         user = Customer.objects.create_user(email=email, username=name, password=password)
         jwt_tokens = generate_jwt(user)
         user_data = CustomerSerializer(user).data
-        return Response({"message": "User registered successfully", "tokens": jwt_tokens, "customer":user_data}, status=200)
+        return Response({"message": "User registered successfully", "tokens": jwt_tokens, "customer": user_data}, status=200)
     return Response(serializer.errors, status=400)
 
 @swagger_auto_schema(
@@ -63,6 +63,7 @@ def login(request):
             jwt_tokens = generate_jwt(user)
             return Response({"message": "Login successful", "tokens": jwt_tokens, "customer": user_data}, status=200)
     return Response({"error": "Invalid credentials"}, status=400)
+
 
 class GoogleLoginURL(APIView):
     """Returns the Google login URL for OAuth"""
@@ -135,7 +136,6 @@ class GoogleLogin(APIView):
         return Response({"message": "Login successful", "tokens": jwt_tokens}, status=200)
 
 
-
 # 📧 Customer API Views
 class CustomerListCreateView(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
@@ -144,6 +144,8 @@ class CustomerListCreateView(generics.ListCreateAPIView):
 class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    lookup_field = 'id'  # Ensures UUID-based lookup
+
 
 # 🏠 Address API Views
 class AddressListCreateView(generics.ListCreateAPIView):
@@ -153,6 +155,8 @@ class AddressListCreateView(generics.ListCreateAPIView):
 class AddressDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
+    lookup_field = 'id'  # Ensures UUID-based lookup
+
 
 # 💼 Job API Views
 class JobListCreateView(generics.ListCreateAPIView):
@@ -162,3 +166,4 @@ class JobListCreateView(generics.ListCreateAPIView):
 class JobDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
+    lookup_field = 'id'  # Ensures UUID-based lookup

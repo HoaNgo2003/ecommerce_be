@@ -4,6 +4,7 @@ from .models import Book, Phone, Clothes, Product
 
 class BaseProductSerializer(serializers.ModelSerializer):
     # Define the images field in the base serializer
+    id = serializers.UUIDField(read_only=True)  # UUID support
     images = serializers.ListField(child=serializers.CharField())
 
     class Meta:
